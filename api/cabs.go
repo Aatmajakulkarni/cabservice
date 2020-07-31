@@ -7,6 +7,8 @@ import(
   "math/rand"
   models "cabservice/model"
   db "cabservice/db"
+  "github.com/gin-gonic/gin"
+  utils"cabservice/utils"
 )
 
 
@@ -35,4 +37,48 @@ func getRandomLocationCoordinates(latmin, latmax float64, longmin, longmax float
 	randomLongitudeCoordinates := longmin + rand.Float64()*(longmax-longmin)
 
 	return randomLatitudeCoordinates,randomLongitudeCoordinates
+}
+
+
+
+func CabV1Routes(router *gin.Engine) {
+
+	cabRouter := router.Group("/v1/cab")
+	{
+    cabRouter.Use(ValidateUserRequestAndFetchUser())
+
+		cabRouter.PUT("/endride/:id", endRide)
+  }
+
+}
+
+func endRide(c *gin.Context){
+  cabId := c.Param("id")
+  fmt.Printf("\n cab id %+v", cabId)
+  userId := c.GetString("user_id")
+  fmt.Printf("\n user id %+v", userId)
+  toggleCabAvailabilityStatusErr := db.ToggleCabAvailabilityStatus(cabId, true)
+  if toggleCabAvailabilityStatusErr != nil {
+    utils.PrintStackTrace("\n endRide 1 %+v", toggleCabAvailabilityStatusErr)
+    utils.SendError(c, 200, utils.APP_ERROR_SERVER)
+    return
+  }else{
+    var timeDiff int
+    userRideDetails, userRideDetailsErr := db.GetUserRideDetailsByUserAndCabId(userId, cabId)
+    if userRideDetailsErr != nil {
+      utils.PrintStackTrace("\n endRide 2 %+v", userRideDetailsErr)
+      timeDiff = 0
+    }else{
+      timeDiff = int(time.Now().Sub(userRideDetails.StartTime).Hours())
+    }
+
+    UpdateEndRideDetailsForUserErr := db.UpdateEndRideDetailsForUser(userId, cabId, time.Now(), timeDiff, "Finished")
+    if UpdateEndRideDetailsForUserErr != nil {
+      utils.PrintStackTrace("\n endRide 3 %+v", UpdateEndRideDetailsForUserErr)
+      utils.SendError(c, 200, utils.APP_ERROR_SERVER)
+      return
+    }else{
+      utils.SendSuccess(c, nil)
+    }
+  }
 }

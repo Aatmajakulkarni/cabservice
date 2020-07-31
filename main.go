@@ -8,8 +8,9 @@ import(
 func main(){
     apis.InitializeCabs()
   	router := gin.Default()
-  //  router.Use(CORS())
+    router.Use(CORS())
     apis.UserCabV1Routes(router)
+    apis.CabV1Routes(router)
     router.Run(":9000")
 }
 

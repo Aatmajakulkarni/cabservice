@@ -15,7 +15,8 @@ const (
 	APP_ERROR_ALREADY_EXISTS        = SEVERITY_ERROR + FACILITIES_APPLICATION + 8  //49416
 	APP_ERROR_TIME_ERROR            = SEVERITY_ERROR + FACILITIES_APPLICATION + 9  //49417
 	APP_ERROR_NO_CABS_AVAILABLE     = SEVERITY_ERROR + FACILITIES_APPLICATION + 10  //49418
-
+	USER_ERROR_INVALID_SESSION      = SEVERITY_ERROR + FACILITIES_APPLICATION + 11  //49419
+	USER_ERROR_NO_SUCH_USER         = SEVERITY_ERROR + FACILITIES_APPLICATION + 12  //49420
 
 )
 
@@ -42,6 +43,10 @@ func GetErrorMessage(errorCode int) string {
 		message = "invalid time"
 	case APP_ERROR_NO_CABS_AVAILABLE:
 		message = "Sorry! no cabs are available currently"
+	case USER_ERROR_INVALID_SESSION:
+		message = "Invalid session"
+	case USER_ERROR_NO_SUCH_USER:
+		message = "No such user"
 	}
 
 	return message
