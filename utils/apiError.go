@@ -51,6 +51,7 @@ func GetErrorMessage(errorCode int) string {
 
 	return message
 }
+
 func GetError(errorCode int) Response {
 	message := GetErrorMessage(errorCode)
 	return Response{Status: Status{StatusCode: errorCode, Message: message}}

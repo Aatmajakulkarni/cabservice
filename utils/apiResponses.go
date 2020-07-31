@@ -4,6 +4,7 @@ import(
     "github.com/gin-gonic/gin"
     "net/http"
 )
+
 type Response struct {
   Status Status `json:"status"`
   Payload interface{} `json:"payload"`

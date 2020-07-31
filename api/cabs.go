@@ -10,6 +10,12 @@ import(
   "github.com/gin-gonic/gin"
   utils"cabservice/utils"
 )
+/*
+Function name : InitializeCabs
+Description  :  this function generates random 12 latitudes and logitudes and adds them in mysql cab_info table
+Params       :  nil
+Return       :  nil
+*/
 
 
 func InitializeCabs() {
@@ -31,6 +37,13 @@ func InitializeCabs() {
   }
 }
 
+/*
+Function name : getRandomLocationCoordinates
+Description  : generates random co-ordinates from given min,max range
+Params       :  latitudeMin, latitudeMax, longitudeMin, longitudeMax
+Return       :  (float, float)(generated latitide, longitude)
+*/
+
 func getRandomLocationCoordinates(latmin, latmax float64, longmin, longmax float64) (float64,float64) {
 
 	randomLatitudeCoordinates := latmin + rand.Float64()*(latmax-latmin)
@@ -40,7 +53,12 @@ func getRandomLocationCoordinates(latmin, latmax float64, longmin, longmax float
 }
 
 
-
+/*
+Function name : CabV1Routes
+Description  : router group for REST api
+Params       :  *gin.Engine
+Return       :  nil
+*/
 func CabV1Routes(router *gin.Engine) {
 
 	cabRouter := router.Group("/v1/cab")
@@ -52,6 +70,13 @@ func CabV1Routes(router *gin.Engine) {
 
 }
 
+/*
+Function name : endRide
+Description   : ends ride for given cab id, updates end time, travel time and ride status in mysql table
+Params        : c *gin.Context
+Path Param    : cabId
+Return        :  nil
+*/
 func endRide(c *gin.Context){
   cabId := c.Param("id")
   fmt.Printf("\n cab id %+v", cabId)

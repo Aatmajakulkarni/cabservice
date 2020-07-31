@@ -12,22 +12,41 @@ import(
   utils"cabservice/utils"
 )
 
+/*
+Function name : UserCabV1Routes
+Description  : router group for user REST api
+Params       :  *gin.Engine
+Return       :  nil
+*/
+
 func UserCabV1Routes(router *gin.Engine) {
 
   loginRouter := router.Group("v1/new")
   {
+    //for new user login
     loginRouter.POST("login", newUserLogin)
   }
+
 	userRouter := router.Group("/v1/user")
 	{
     userRouter.Use(ValidateUserRequestAndFetchUser())
 
+    //user can book a cab
     userRouter.POST("/book", bookCab)
 
+    //user's all past rides
     userRouter.GET("/rides", getUserRides)
   }
 
 }
+
+/*
+Function name : newUserLogin
+Description  :  this function is for new user login if the user already exists then it returns token for existing user
+                or creates new encrypted token with encryption key
+Params       :  c *gin.Context
+Return       :  nil
+*/
 
 func newUserLogin(c *gin.Context){
 	var userInfo models.UserInfo
@@ -60,6 +79,14 @@ func newUserLogin(c *gin.Context){
 		UserInfo:     userInfo}
 	utils.SendSuccess(c, payload)
 }
+
+/*
+Function name : bookCab
+Description  :  this function fetches all available cabs and calculates Distance for each cab from user's booking location and sends
+                nearest cab details as a reponse
+Params       :  c *gin.Context
+Return       :  nil
+*/
 
 func bookCab(c *gin.Context){
   var pickup models.UserPickup
@@ -134,6 +161,13 @@ func bookCab(c *gin.Context){
 	}
 }
 
+/*
+Function name : quicksort
+Description  :  this function uses quick sort from cabs Distances
+Params       :  []models.CabInfo, leftIndex, rightIndex
+Return       :  nil
+*/
+
 func quicksort(result []models.CabInfo, leftIndex int, rightIndex int) {
 
 	if leftIndex >= rightIndex {
@@ -154,11 +188,26 @@ func quicksort(result []models.CabInfo, leftIndex int, rightIndex int) {
 	quicksort(result, cnt, rightIndex)
 }
 
+/*
+Function name : swap
+Description  :  this function interchanges cabInfo
+Params       :  *models.CabInfo, *models.CabInfo
+Return       :  nil
+*/
+
 func swap(a *models.CabInfo, b *models.CabInfo) {
 	temp := *a
 	*a = *b
 	*b = temp
 }
+
+/*
+Function name : CalculateDistance
+Description  :  this function calculate Distance between 2 locations
+Params       :  pointer to WaitGroup, array of available cabs, current index, userlatitude, userlongitude
+Return       :  nil
+*/
+
 
 func CalculateDistance(wg *sync.WaitGroup, currentlyAvailableCabs *[]models.CabInfo, index int, userLat float64, userLong float64) {
 
@@ -183,6 +232,13 @@ func CalculateDistance(wg *sync.WaitGroup, currentlyAvailableCabs *[]models.CabI
 func hsin(theta float64) float64 {
 	return math.Pow(math.Sin(theta/2), 2)
 }
+
+/*
+Function name : getUserRides
+Description  :  this function returns all past user rides
+Params       :  c *gin.Context
+Return       :  nil
+*/
 
 func getUserRides(c *gin.Context){
   userId := c.GetString("user_id")

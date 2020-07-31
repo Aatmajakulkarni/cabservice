@@ -8,7 +8,15 @@ import (
 	models "cabservice/model"
 	"github.com/gin-gonic/gin"
 )
-// function to validate users request and fetching user
+/*
+Function name : ValidateUserRequestAndFetchUser
+Description  :  function to validate users request and fetching user
+								decodes the authorization header from request with the encryption key and checks if its a valid user or not
+								this also fetches existing user details fromdatabase and saves them in session to avoid multiple database queries
+Params       :  c *gin.Context
+Return       :  nil
+*/
+
 func ValidateUserRequestAndFetchUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.Header.Get("authorization") != "" {
@@ -42,6 +50,13 @@ func ValidateUserRequestAndFetchUser() gin.HandlerFunc {
 		}
 	}
 }
+
+/*
+Function name : getUserFromSession
+Description  :  this function sets user from session
+Params       :  c *gin.Context
+Return       :  models.UserInfo, bool(successfully fetched user fromsession or not)
+*/
 
 func getUserFromSession(c *gin.Context) (models.UserInfo, bool) {
 	userInSession, Ok := c.Get("user")

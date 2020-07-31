@@ -7,6 +7,13 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
+/*
+Function name : CreateToken
+Description   : this function creates encrypted jwt token
+Params        : userid
+Return        : token(string)
+*/
+
 func CreateToken(userId string) string {
 	fmt.Println("fcm payload")
 
@@ -26,7 +33,14 @@ func CreateToken(userId string) string {
 	return ss
 }
 
-// DecodeToken decodes the JWT token
+/*
+Function name : DecodeToken
+Description   : DecodeToken decodes the JWT token
+Params        : token(string)
+Return        : decodedtoken(string), error
+*/
+
+
 func DecodeToken(tokenStr string) (string, error) {
 	claim := TokenClaims{}
 	token, err := jwt.ParseWithClaims(tokenStr, &claim, func(token *jwt.Token) (interface{}, error) {
