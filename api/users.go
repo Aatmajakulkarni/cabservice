@@ -21,7 +21,7 @@ Return       :  nil
 
 func UserCabV1Routes(router *gin.Engine) {
 
-  loginRouter := router.Group("v1/new")
+  loginRouter := router.Group("/v1/new")
   {
     //for new user login
     loginRouter.POST("login", newUserLogin)
