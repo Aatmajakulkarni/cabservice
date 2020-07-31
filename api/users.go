@@ -103,7 +103,7 @@ func bookCab(c *gin.Context){
   //fmt.Printf("\n data binded successfully\n")
   currentlyAvailableCabs, currentlyAvailableCabsErr := db.GetAvailableCabs(true)
   if currentlyAvailableCabsErr != nil{
-    fmt.Printf("bookCab 1", currentlyAvailableCabsErr)
+    fmt.Printf("bookCab 1 %+v", currentlyAvailableCabsErr)
     utils.SendError(c, 200, utils.APP_ERROR_SERVER)
     return
   }else{

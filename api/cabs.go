@@ -18,10 +18,12 @@ Return       :  nil
 */
 
 
-func InitializeCabs() {
+func InitializeCabs() []models.CabInfo {
 	// Setting up my cabs here. Assuming a dozen cabs. This can be taken as an input too. For the sake
 	// of convenience am setting it up here
   rand.Seed(time.Now().UnixNano())
+
+  cabsInfo := make([]models.CabInfo, 12)
   for rangenumber:= 0; rangenumber < 12; rangenumber ++ {
     latitde,longitude := getRandomLocationCoordinates(18.4529, 18.6298, 73.7389, 73.9787)
 
@@ -34,7 +36,10 @@ func InitializeCabs() {
       if addCabError != nil {
         fmt.Printf("\n\n Failed to Initialize Cab %+v due to %+v\n", cabInfo, addCabError)
       }
+      cabsInfo = append(cabsInfo, cabInfo)
   }
+
+  return cabsInfo
 }
 
 /*

@@ -51,7 +51,7 @@ func DecodeToken(tokenStr string) (string, error) {
 		fmt.Printf("%v %v", claims.Uid, claims.StandardClaims.ExpiresAt)
 		return claims.Uid, nil
 	} else {
-		fmt.Println("DecodeToken 1 %+v", err)
+		fmt.Printf("DecodeToken 1 %+v", err)
 		return "", err
 	}
 }
